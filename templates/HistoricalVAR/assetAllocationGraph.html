@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>{{title}}</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  
+{% endblock head %}
+
+{% block content %}
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel">
+<script>
+$(function () { 
+    $('#container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+            categories: ['Cash', 'Equity US', 'Equity Developed', 'Equity Emerging','REIT','Bond Sov', 'Bond Muni', 'Bond Corp','IR Swaps','Gold']
+        },
+        yAxis: {
+            title: {
+                text: 'Allocation %'
+            }
+        },
+        series: [{
+            name: 'Plan',
+            data: [5,30,5,10,15,10,20,0,0,5]
+        }, {
+            name: 'Actual',
+            data: [10,20,40,11,20,10,15,0,0,10]
+        }]
+    });
+});
+</script>
+			<div id="container"></div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

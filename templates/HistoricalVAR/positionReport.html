@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+{% endblock head %}
+
+{% block content %}
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel">
+  			<div id="myGrid" style="width:100%;height:600px;"></div>
+		</div>
+	</div>
+</div>
+<script src="/cmt/static/SlickGrid/lib/jquery-1.7.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script src="/cmt/static/SlickGrid/slick.core.js"></script>
+<script src="/cmt/static/SlickGrid/slick.grid.js"></script>
+
+<script>
+  var grid;
+  var columns = [
+    {id: "asOf", name: "AsOf", field: "asOf", width:100},                 
+    {id: "portfolio", name: "Portfolio", field: "portfolio", width:150},                 
+    {id: "type", name: "Type", field: "type", width:175},
+    {id: "ticker", name: "Ticker", field: "ticker", width:125},
+    {id: "shares", name: "Shares", field: "shares", width:100}
+  ];
+
+  var options = {};
+  
+  $(function () {
+    var data = [];
+        
+    //needs |safe to get quotes
+    var positionData = jQuery.parseJSON('{{jsonPositionData|safe}}');
+
+    for(var i=0;i<positionData.length;i++){
+        var position = positionData[i];
+        data[i] = {asOf:position[0],portfolio:position[1],type:position[2],ticker:position[3],shares:position[4]};
+    }
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+  })
+
+</script>
+{% endblock content %}

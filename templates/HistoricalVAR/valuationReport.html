@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+{% endblock head %}
+
+{% block content %}
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel">
+  			<div id="myGrid" style="width:100%;height:600px;"></div>
+		</div>
+	</div>
+</div>
+<script src="/cmt/static/SlickGrid/lib/jquery-1.7.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script src="/cmt/static/SlickGrid/slick.core.js"></script>
+<script src="/cmt/static/SlickGrid/slick.grid.js"></script>
+
+<script>
+  var grid;
+  var columns = [
+    {id: "portfolioName", name: "Portfolio Name", field: "portfolioName", width: 175},
+    {id: "pricingDate", name: "Pricing Date", field: "pricingDate", width: 150},
+    {id: "value", name: "Value", field: "value", width: 200}    
+  ];
+
+  var options = {
+    enableCellNavigation: true,
+    enableColumnReorder: false
+  };
+  
+  $(function () {
+    var data = [];
+    data[0] = {portfolioName:'{{portfolio.name}}', pricingDate:'{{pricingDate}}', value:'${{mtm}}'};
+
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+  })
+  
+</script>
+
+{% endblock content %}

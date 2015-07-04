@@ -1,0 +1,1 @@
+document.getElementById('test').innerHTML='Javascript test successful!!';

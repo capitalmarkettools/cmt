@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+
+{% endblock head %}
+
+{% block content %}
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel">
+  			<div id="myGrid" style="width:100%;height:600px;"></div>
+		</div>
+	</div>
+</div>
+<script src="/cmt/static/SlickGrid/lib/jquery-1.7.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script src="/cmt/static/SlickGrid/slick.core.js"></script>
+<script src="/cmt/static/SlickGrid/slick.grid.js"></script>
+
+<script>
+  var grid;
+  var columns = [
+    {id: "portfolio", name: "Portfolio", field: "portfolio", width:150},                 
+    {id: "transactionType", name: "TType", field: "transactionType", width:100},
+    {id: "positionType", name: "PosType", field: "positionType", width:100},
+    {id: "ticker", name: "Ticker", field: "ticker", width:125},
+    {id: "shares", name: "Shares", field: "shares", width:100},
+    {id: "transactionDate", name: "Trans. Date", field: "transactionDate", width:150},
+    {id: "effectiveDate", name: "Eff. Date", field: "effectiveDate", width:150}  
+  ];
+
+  var options = {};
+  
+  $(function () {
+    var data = [];
+        
+    //needs |safe to get quotes
+    var transactionData = jQuery.parseJSON('{{jsonTransactionData|safe}}');
+
+    for(var i=0;i<transactionData.length;i++){
+        var position = transactionData[i];
+        data[i] = {portfolio:position[0],transactionType:position[1],positionType:position[2],ticker:position[3],shares:position[4],transactionDate:position[5],effectiveDate:position[6]};
+    }
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+  })
+
+</script>
+{% endblock content %}

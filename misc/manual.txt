@@ -1,0 +1,39 @@
+- General
+	- User environment
+	- Security among user accounts
+- Account Management
+- Features
+	- Positions
+	- Valuations
+	- Historical Value At Risk
+	- Correlation Calculator
+	- Market Data
+		- Equity Prices
+		- Interest Rate Curves
+- Use Cases
+	- Register
+	1. Click Register
+	2. Enter Registration information
+	3. Check email
+	4. Click link in email
+	5. Now, you are registered
+	- Price Swap interactively
+	1. Click on Swap Calculator
+	2. Some default information is provided.
+	3. Enter at least Start Date, End Date and Coupon as fixed rate
+	4. Amend any other field
+	5. Hit Calculate and the system will price the swap
+	- Price Bond interactively
+	- Setup new Portfolio
+	
+	- Add Position to Portfolio
+	- Run valuation of Portfolio
+	- Calculate Historical Value At Risk of Portfolio
+	- Calculate Correlation between Portfolio and Security
+	- Change default system date
+	- Change default market id
+	- Add new Equity ticker with market data
+	- Add new Bond Terms&Conditions with market data
+	- Look at Interst Rate Curves
+	- Look at Equity Prices
+	

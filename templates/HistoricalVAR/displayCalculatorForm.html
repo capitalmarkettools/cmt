@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="." method="post">{% csrf_token %}
+	<div class="row">
+		<div class="large-8 columns">
+			<div class="panel">
+				<form action="." method="POST">
+			  		<input type="submit" value="Calculate" name="Calculate" class="button">
+		    		{% load crispy_forms_tags %}
+					{% crispy form %}
+				</form>
+			</div>
+		</div>
+		<div class="large-4 columns">
+			<div class="panel">
+   				<table border="1">
+					<tr><td>Fair Value</td><td>{{price}}</td></tr>
+					<tr><td>Fair Rate</td><td>{{fairRate}}</td></tr>
+					<tr><td>Fair Spread</td><td>{{fairSpread}}</td></tr>
+					<tr><td>Fixed BP01</td><td>{{fixedLegBPS}}</td></tr>
+					<tr><td>Floating BP01</td><td>{{floatingLegBPS}}</td></tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</form>
+
+{% endblock content %}

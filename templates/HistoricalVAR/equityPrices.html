@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+
+{% endblock head %}
+
+{% block content%}
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel">
+  			<div id="myGrid" style="width:100%;height:600px;"></div>
+		</div>
+	</div>
+</div>
+<script src="/cmt/static/SlickGrid/lib/jquery-1.7.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script src="/cmt/static/SlickGrid/slick.core.js"></script>
+<script src="/cmt/static/SlickGrid/slick.grid.js"></script>
+
+<script>
+  var grid;
+  var columns = [
+    {id: "pricingDate", name: "Pricing Date", field: "pricingDate", width:150},                 
+    {id: "marketId", name: "Market Data Id Context", field: "marketId", width:175},
+    {id: "ticker", name: "Ticker", field: "ticker", width:125},
+    {id: "price", name: "Price", field: "price", width:100}
+  ];
+
+  var options = {
+    enableCellNavigation: true,
+    enableColumnReorder: false
+  };
+  
+  $(function () {
+    var data = [];
+        
+    //needs |safe to get quotes
+    var positionData = jQuery.parseJSON('{{jsonEquityPrices|safe}}');
+//    data[0] = {pricingDate:1,marketId:1,ticker:1,price:1};
+
+    for(var i=0;i<positionData.length;i++){
+        var position = positionData[i];
+        data[i] = {pricingDate:position[0],marketId:position[1],ticker:position[2],price:position[3]};
+    }
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+  })
+</script>
+
+{%endblock content%}
+
+{% block sidebarExtension %}
+<ul>
+        <li><a href="http://localhost:8000/cmt/showAllEquityPricesExcel">Export to Excel</a></li>
+</ul>
+{% endblock %}

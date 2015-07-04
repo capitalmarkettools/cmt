@@ -1,0 +1,8 @@
+Thank you for registering at {{site}}. Your account needs to be activated in {{expiration_days}} days.
+
+Please note that this is a research and development site. We attempt to provide reliable pricing algorithms but we cannot ensure that your data that is stored in the database will not be refreshed without any warning.
+
+Your activation link is {{site}}/accounts/activate/{{activation_key}}
+
+Best regards,
+Registration team

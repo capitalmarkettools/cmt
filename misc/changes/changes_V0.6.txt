@@ -1,0 +1,24 @@
+1. Change all .get() and .filter to check for existence with .exist(). Also, cleaned up some .filter() calls to make them .get()
+2. Changed the long sequence of rate creation in DBInitialData.py to move it all into constructor
+3. Rename and port tgVARSite DB to cmt
+4. create script to delete all tables so that I can just to manage.py syncdb to restore
+5. Changed table names from tghistoricalvar... to cmt...
+6. Provided default fields for InterestRateCurve in views
+7. Changed all index fields from string to Index
+8. Removed print debug statements from FREDLoader.py
+9. Removed TEST2, TEST3, TEST4 marketid from equity price file. Also, renamed cvid to marketid
+10 Changed FREDLoader to load TEST1 and EOD and refactored a little to take marketId
+11. Removed fromFields.py. It was all commented out
+12. Removed all references to listPortfoliosAndActions and fxOption
+13. Ensure that all forms are defaulted meaningful. Move defaults into views.py
+14. Commented out 'Password Reset' and 'Delete Account' becuase it's broken
+15. Make bond calculator consistent with swap calculator to have a table on bottom and keep calculate button
+16. Add screen to load and save market data for portfolio. Added test cases.
+17. Amended the DBInitialData to load EOD mkt data
+18. Everywhere added named variables in function calls
+19. Change formDone.html to have notification variable added
+20. Add report that shows all portfolios, all positions, tickers, ticker type, units, value
+21. Introduce converter class
+
+
+

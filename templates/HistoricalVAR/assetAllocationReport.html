@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+
+{% endblock head %}
+
+{% block content %}
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel">
+			<div id="container"></div>
+ 		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel">
+  			<div id="myGrid" style="width:100%;height:300px;"></div>
+		</div>
+	</div>
+</div>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script>
+$(function () {
+
+var options = {
+	chart: {renderTo: 'container', defaultSeriesType: 'column'},
+    title: {text: 'Asset Allocation'},
+    xAxis: {categories: [],},
+    yAxis: {title: {text: 'Percent'}, ceiling: 100, floor: 0},
+    series: [
+    {name: 'Actual', data: []},
+    {name: 'Target',	data: []},
+    ],
+};
+
+var reportData = jQuery.parseJSON('{{reportData|safe}}');
+for(var i=0;i<reportData.length;i++){
+	var row = reportData[i];
+	options.series[0].data.push(row[1]*1.0);
+	options.series[1].data.push(row[2]*1.0);
+	options.xAxis.categories.push(row[0])
+}
+
+var chart = new Highcharts.Chart(options);
+});
+</script>
+
+<script src="/cmt/static/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script src="/cmt/static/SlickGrid/slick.core.js"></script>
+<script src="/cmt/static/SlickGrid/slick.grid.js"></script>
+<script>
+  var grid;
+  var columns = [
+    {id: "assetType", name: "Asset Type", field: "assetType", width:150},                 
+    {id: "allocation", name: "Allocation", field: "allocation", width:100},
+    {id: "target", name: "Target", field: "target", width:100}
+  ];
+
+  var options = {};
+  
+  $(function () {
+    var data = [];
+        
+    //needs |safe to get quotes
+    var reportData = jQuery.parseJSON('{{reportData|safe}}');
+
+    for(var i=0;i<reportData.length;i++){
+        var row = reportData[i];
+        data[i] = {assetType:row[0],allocation:row[1],target:row[2]};
+    }
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+  })
+
+</script>
+{% endblock content %}

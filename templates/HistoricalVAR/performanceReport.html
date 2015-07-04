@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+
+{% endblock head %}
+
+{% block content %}
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel">
+  			<div id="myGrid" style="width:100%;height:600px;"></div>
+		</div>
+	</div>
+</div>
+<script src="/cmt/static/SlickGrid/lib/jquery-1.7.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script src="/cmt/static/SlickGrid/slick.core.js"></script>
+<script src="/cmt/static/SlickGrid/slick.grid.js"></script>
+
+<script>
+  var grid;
+  var columns = [
+    {id: "portfolio", name: "Portfolio", field: "portfolio", width:150},                 
+    {id: "startValue", name: "Start Value", field: "startValue", width:100},
+    {id: "endValue", name: "End Value", field: "endValue", width:100},
+    {id: "periodPerformance", name: "Period Performance", field: "periodPerformance", width:200},
+    {id: "annualPerformance", name: "Annual Performance", field: "annualPerformance", width:200}
+  ];
+
+  var options = {};
+  
+  $(function () {
+    var data = [];
+        
+    //needs |safe to get quotes
+    var reportData = jQuery.parseJSON('{{reportData|safe}}');
+
+    for(var i=0;i<reportData.length;i++){
+        var row = reportData[i];
+        data[i] = {portfolio:row[0],startValue:row[1],endValue:row[2],periodPerformance:row[3],annualPerformance:row[4]};
+    }
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+  })
+
+</script>
+{% endblock content %}
+                        

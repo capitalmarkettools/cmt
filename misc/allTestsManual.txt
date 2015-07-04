@@ -1,0 +1,25 @@
+1. Tests
+	a) HVAR
+		1) HVAR, Equity='TEST1', AsOf=9/12/11, Start=8/30/11, End=9/12/11, MktId='TEST1'
+		2) HVAR, Bond='TEST1', AsOf=9/12/11, Start=8/30/11, End=9/12/11, MktId='TEST1'	
+		3) HVAR, Equity='TEST1 and Bond='TEST1', AsOf=9/12/11, Start=8/30/11, End=9/12/11, MktId='TEST1'	
+		4) HVAR Correlation, Portfolio='TEST1', Equity='TEST1', AsOf=9/12/11, Start=8/30/11, End=9/12/11, MktId='TEST1'	
+	b) Performance
+		1) Return, Portfolio='TEST1', AsOf=9/12/11, Start=8/30/11, End=9/12/11, MktId='TEST1'	
+		
+2. Data Initialization for Tests
+	a) Location='Manhasset'
+	b) Users='root', 'cmt1', 'test1'; Each with Profile
+	c) TCBond='TEST1'
+	d) Equity='TEST1', 'TEST2'
+	e) StockPrice='TEST1/9/12/11','TEST2/9/12/11','TEST1/8/30/11','TEST2/8/30/11'
+	f) Portfolio='TEST1'
+	g) Position='9/12/11/TEST1_Portfolio/EQUITY/TEST1','9/12/11/TEST1_Portfolio/EQUITY/TEST2',
+		'9/12/11/TEST1_Portfolio/BOND/TEST1'.'8/30/11/TEST1_Portfolio/EQUITY/TEST1',
+		'8/30/11/TEST1_Portfolio/EQUITY/TEST2','8/30/11/TEST1_Portfolio/BOND/TEST1'
+		'8/30/11/TEST1_Portfolio/CASH/Cash'
+	h) IRCurves='9/12/11/TEST1/USD/LIBOR/3/M','8/30/11/TEST1/USD/LIBOR/3/M',   
+	i and j) Rates and Equity Price excel improts
+	k) HVAR Config='TEST1/8/30/11/9/12/11/TEST1'        
+	l) moreData() function
+

@@ -1,0 +1,15 @@
+BEGIN;
+DROP TABLE `cmt_stockprice`;
+ALTER TABLE `cmt_interestrate` DROP FOREIGN KEY `curve_id_refs_id_58c2433d`;
+DROP TABLE `cmt_interestratecurve`;
+DROP TABLE `cmt_interestrate`;
+DROP TABLE `cmt_tcswap`;
+DROP TABLE `cmt_tcbond`;
+DROP TABLE `cmt_identifier`;
+DROP TABLE `cmt_hvarconfiguration`;
+DROP TABLE `cmt_userprofile`;
+DROP TABLE `cmt_location`;
+DROP TABLE `cmt_equity`;
+DROP TABLE `cmt_position`;
+DROP TABLE `cmt_portfolio`;
+COMMIT;

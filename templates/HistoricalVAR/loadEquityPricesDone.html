@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{%block title%}Load Equity Prices Done{%endblock title%}
+
+{% block content%}
+<div class="row">
+	<div class="small-4 columns">
+		<div class="panel">
+			<p>Load Equity Prices Done</p>
+			<p>Analysis Start Date: {{startDate}}</p>
+			<p>Analysis End Date: {{endDate}}</p>
+			<p>Equity: {{ticker}}</p>
+		</div>
+	</div>
+</div>
+{% endblock content %}

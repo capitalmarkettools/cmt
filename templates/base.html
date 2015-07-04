@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="/cmt/static/style.css" />
+<!-- Start css3menu.com HEAD section -->
+    <link rel="stylesheet" href="/cmt/static/css3menu1/style.css" type="text/css" /><style>._css3m{display:none}</style>
+<!-- End css3menu.com HEAD section -->
+<!-- Foundation -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/cmt/static/foundation-5.2.1/css/foundation.css" />
+    <script src="/cmt/static/foundation-5.2.1/js/vendor/modernizr.js"></script>
+    
+{% block head %}
+<title>{% block title %} Capital Market Tools {% endblock %}</title>
+{% endblock head %}
+
+</head>
+
+<body>
+{% block menu %}
+<div class="row">
+<div class="large-12 columns">
+<!-- Start css3menu.com BODY section -->
+<ul id="css3menu1" class="topmenu">
+    <li class="topmenu title="hint""><a href="/cmt/"><span onClick="void(0)">Home</span></a></li>
+
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">Account</span></a>
+    <ul>
+        <li class="subfirst" title="hint"><a href="/cmt/accounts/login/">Login</a></li>
+        <li title="hint"><a href="/cmt/accounts/logout">Logoff</a></li>
+        <li title="hint"><a href="/cmt/TBD">Password Reset</a></li>
+        <li title="hint"><a href="/cmt/TBD">Register</a></li>
+        <li class="sublast" title="hint"><a href="/cmt/TBD">Delete Account</a></li>
+    </ul></li>
+
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">Calculators</span></a>
+    <ul>
+        <li class="subfirst" title="hint"><a href="/cmt/bondCalculator">Bond Calculator</a></li>
+        <li class="sublast" title="hint"><a href="/cmt/swapCalculator">Swap Calculator</a></li>
+    </ul></li>
+
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">Analytics</span></a>
+    <ul>
+        <li class="subfirst" title="hint"><a href="/cmt/allPortfolioDetailsReport">All Portfolios Detail Report</a></li>		
+        <li title="hint"><a href="/cmt/valuationReport">Valuation Report</a></li>
+        <li title="hint"><a href="/cmt/hvarPortfolioWithParametersCalculate">Historical VaR Report</a></li>
+        <li title="hint"><a href="/cmt/hvarPortfolioWithParametersCalculatePreConfigured">Preconfigured Historical VaR Report</a></li>
+        
+<!--    <li title="hint"><a href="/cmt/portfolioPortfolioCorrelation">Portfolio/Portfolio Correlation Report</a></li> -->
+<!--    <li title="hint"><a href="/cmt/portfolioPortfolioCorrelationPreConfigured">Preconfigured Portfolio/Portfolio Correlation Report</a></li> -->        
+        <li title="hint"><a href="/cmt/portfolioBenchmarkCorrelation">Portfolio/Benchmark Correlation Report</a></li>
+<!--	<li title="hint"><a href="/cmt/portfolioBenchmarkCorrelationPreConfigured">Preconfigured Portfolio/Benchmark Correlation Report</a></li> -->	
+        <li title="hint"><a href="/cmt/performanceReport">Performance Report</a></li>
+        <li title="hint"><a href="/cmt/assetAllocationReport">Asset Allocation Report</a></li>
+        <li class="sublast" title="hint"><a href="/cmt/netWorthTrendReport">Net Worth Trend</a></li>
+    </ul></li>
+
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">Trades</span></a>
+    <ul>
+        <li class="subfirst" title="hint"><a href="/cmt/positionReport">List All Positions</a></li>
+        <li title="hint"><a href="/cmt/position">New/Delete Positions</a></li>
+        <li title="hint"><a href="/cmt/transactionReport">List All Transactions</a></li>
+        <li class="sublast" title="hint"><a href="/cmt/transaction">New/Delete Transactions</a></li>
+    </ul></li>
+
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">Market Data</span></a>
+    <ul>
+        <li class="subfirst" title="hint"><a href="/cmt/showEquityPrices" title="hint">Show Equity Prices</a></li>
+        <li title="hint"><a href="/cmt/loadEquityPrices">Load Equity Prices</a></li>
+        <li class="sublast" title="hint"><a href="/cmt/interestRateCurveReportCalculate">Show Interest Rate Curve</a></li>
+    </ul></li>    
+
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">Maintenance</span></a>
+    <ul>
+        <li class="subfirst" title="hint"><a href="/cmt/batch">Batch</a></li>
+    </ul></li>    
+
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">Static Data</span></a>
+    <ul>
+        	<li class="subfirst" title="hint"><a href="/cmt/tCBondReport">Bond T&C: List All</a></li>
+        	<li title="hint"><a href="/cmt/tCBond">Bond T&C: New/Delete</a></li> 
+        	<li title="hint"><a href="/cmt/tCSwapReport">Swap T&C: List All</a></li>
+        	<li title="hint"><a href="/cmt/tCSwap">Swap T&C: New/Delete</a></li> 
+        	<li title="hint"><a href="/cmt/equityReport">Equity Ticker: List All</a></li>
+        	<li title="hint"><a href="/cmt/equity">Equity Ticker: New/Delete</a></li>
+        	<li title="hint"><a href="/cmt/identifierReport">Bond Identifier: List All</a></li>
+        	<li title="hint"><a href="/cmt/identifier">Bond Identifier: New/Delete</a></li>
+        	<li title="hint"><a href="/cmt/portfolioReport">Portolio: List All</a></li>
+  	        <li title="hint"><a href="/cmt/portfolio">Portfolio: New/Delete</a></li>
+  	        <li title="hint"><a href="/cmt/location">Location: Amend</a></li>
+  	        <li class="sublast" title="hint"><a href="/cmt/userProfile">User Profile: Amend</a></li>
+    </ul></li>
+
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">Big Data</span></a>
+    <ul>
+        <li class="subfirst" title="hint"><a href="/cmt/TBD">Mongo DB</a></li>
+    </ul></li>
+
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">In Testing Phase</span></a>
+    <ul>
+        <li class="subfirst" title="hint"><a href="/cmt/googleChartAPITest">Google Chart</a></li>
+        <li title="hint"><a href="/cmt/excelTest">Excel </a></li>
+        <li title="hint"><a href="/cmt/showEquityPricesExcel" title="hint">Show Equity Prices in Excel</a></li>
+        <li title="hint"><a href="/cmt/chartTest"">Chart Test</a></li>
+        <li title="hint"><a href="/cmt/altGUI">Alternate Home Page</a></li>
+        <li title="hint"><a href="/cmt/overview">Overview</a></li>		
+        <li title="hint"><a href="/cmt/assetAllocationGraph">Asset Allocation Graph</a></li>
+        <li title="hint"><a href="/cmt/loadMissingMarketDataForPortfolio">Load Missing Market Data for Portfolio</a></li>
+        <li class="sublast" title="hint"><a href="/cmt/multiBatches">Batches Over Time Period</a></li>
+    </ul></li>
+       
+    <li class="topmenu" title="hint"><a><span onClick="void(0)">Support</span></a>
+    <ul>
+        <li class="subfirst" title="hint"><a href="/cmt/contact">Leave Comment or Suggestion or Bug Report</a></li>
+    </ul></li>
+    
+    <li class="topmenu" title="hint"><a href="/cmt/admin"><span onClick="void(0)">Admin</span></a></li>
+    
+    
+</ul><p class="_css3m"><a href="http://css3menu.com/">XML CSS Menu Css3Menu.com</a></p>
+<!-- End css3menu.com BODY section -->
+</div>
+</div>
+{%endblock menu%}
+
+{%block infobar%}
+<div class="row">
+	<div class="large-3 columns">
+		<p>Version: Alpha 0.73</p>
+	</div>
+	<div class="large-3 columns">
+		<p>User: {{user}}</p>
+	</div>
+	<div class="large-3 columns">
+		<p>System Date: {{profileSystemDate}}</p>
+	</div>
+	<div class="large-3 columns">
+		<p>Market Id: {{profileMarketId}}</p>
+	</div>
+</div>	
+{%endblock infobar%}
+
+<div class="row">
+	<div class="large-12 columns">
+		<div class="callout panel">
+		{{title}}
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="large-12 columns">
+	    {% block content %}
+        {% endblock content %}
+	</div>
+</div>
+
+</body>
+</html>

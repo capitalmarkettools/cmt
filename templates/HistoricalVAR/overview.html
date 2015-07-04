@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>{{title}}</title>
+{% endblock head %}
+
+{% block content %}
+<div class="row">
+	<div class="large-6 columns">
+		<div class="panel">
+ 			<link rel="stylesheet" href="/cmt/static/SlickGrid/slick.grid.css" type="text/css"/>
+ 			<link rel="stylesheet" href="/cmt/static/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+
+			<div id="myGrid"></div>
+		
+			<script src="/cmt/static/SlickGrid/lib/jquery-1.7.min.js"></script>
+			<script src="/cmt/static/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+			<script src="/cmt/static/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
+			<script src="/cmt/static/SlickGrid/slick.core.js"></script>
+			<script src="/cmt/static/SlickGrid/slick.grid.js"></script>
+<script>
+  var grid;
+  var columns = [
+    {id: "portfolio", name: "Portfolio", field: "portfolio", width:150},                 
+    {id: "transactionType", name: "TType", field: "transactionType", width:100},
+    {id: "positionType", name: "PosType", field: "positionType", width:100},
+    {id: "ticker", name: "Ticker", field: "ticker", width:125},
+    {id: "shares", name: "Shares", field: "shares", width:100},
+    {id: "transactionDate", name: "Trans. Date", field: "transactionDate", width:150},
+    {id: "effectiveDate", name: "Eff. Date", field: "effectiveDate", width:150}  
+  ];
+
+  var options = {};
+  
+  $(function () {
+    var data = [];
+        
+    for(var i=0;i<3;i++){
+        data[i] = {'abc','cde','fgh','ijk','10','1/1/14','1/1/15'};
+    }
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+  })
+</script>
+
+		</div>
+	</div>
+	<div class="large-6 columns">
+		<div class="panel">
+			Positions
+		</div>
+	</div>
+</div>	
+<div class="row">
+	<div class="large-6 columns">
+		<div class="panel">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="http://code.highcharts.com/stock/highstock.js"></script>
+  <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+<script>
+$(function () { 
+    $('#allocationContainer').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: 'Asset Allocation'
+        },
+        xAxis: {
+            categories: ['Cash', 'Equity US', 'Equity Developed', 'Equity Emerging','REIT','Bond Sov', 'Bond Muni', 'Bond Corp','IR Swaps','Gold']
+        },
+        yAxis: {
+            title: {
+                text: 'Allocation %'
+            }
+        },
+        series: [{
+            name: 'Plan',
+            data: [5,30,5,10,15,10,20,0,0,5]
+        }, {
+            name: 'Actual',
+            data: [10,20,40,11,20,10,15,0,0,10]
+        }]
+    });
+});
+</script>
+			<div id="allocationContainer"></div>
+		</div>
+	</div>
+	<div class="large-6 columns">
+		<div class="panel">
+<script>
+$(function() {
+    $('#pLContainer').highcharts({
+        chart : {
+            renderTo : 'container'
+        },
+        title : {
+            text : 'My chart'
+        },
+        series : [{
+            name : 'My Series',
+            data : [
+                [Date.UTC(2006, 0, 29, 0, 0, 0), 30.14],
+                [Date.UTC(2006, 0, 29, 1, 0, 0), 34.76],
+                [Date.UTC(2006, 0, 29, 2, 0, 0), 34.34],
+                [Date.UTC(2006, 0, 29, 3, 0, 0), 33.9]
+            ]
+        }]
+    });
+});
+</script>
+
+			<div id="pLContainer"></div>
+		</div>
+	</div>
+</div>
+{% endblock content %}

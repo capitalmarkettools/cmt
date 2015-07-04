@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block head %}
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>{{title}}</title>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="/cmt/static/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+
+{% endblock head %}
+
+{% block content %}
+<div class="row">
+	<div class="large-12 columns">
+		<div class="panel">
+  			<div id="myGrid" style="width:100%;height:600px;"></div>
+		</div>
+	</div>
+</div>
+<script src="/cmt/static/SlickGrid/lib/jquery-1.7.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="/cmt/static/SlickGrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script src="/cmt/static/SlickGrid/slick.core.js"></script>
+<script src="/cmt/static/SlickGrid/slick.grid.js"></script>
+
+<script>
+  var grid;
+  var columns = [
+    {id: "name", name: "Name", field: "name", width:150},                 
+    {id: "ccy", name: "Ccy", field: "ccy", width:50},
+    {id: "startDate", name: "Start Date", field: "startDate", width:125},
+    {id: "endDate", name: "End Date", field: "endDate", width:125},
+    {id: "coupon", name: "Coupon", field: "coupon", width:100}
+  ];
+
+  var options = {};
+  
+  $(function () {
+    var data = [];
+        
+    //needs |safe to get quotes
+    var bondData = jQuery.parseJSON('{{jsonPortfolioData|safe}}');
+
+    for(var i=0;i<bondData.length;i++){
+        var bond = bondData[i];
+        data[i] = {name:bond[0],ccy:bond[1],startDate:bond[2],endDate:bond[3],coupon:bond[4]+'%'};
+    }
+    grid = new Slick.Grid("#myGrid", data, columns, options);
+  })
+
+</script>
+{% endblock content %}

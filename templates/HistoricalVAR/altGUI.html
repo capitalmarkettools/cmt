@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+	<div class="large-4 columns">
+		<a href="/accounts/login" class="button [radius round]">Login</a>
+	</div>
+	<div class="large-4 columns">
+		<a href="/accounts/logout" class="button [radius round]">Logout</a>
+	</div>
+	<div class="large-4 columns">
+		<a href="/accounts/register" class="button [radius round]">Register</a>
+	</div>
+</div>
+<div class="row">
+	<div class="large-6 columns">
+		<a href="/cmt/swapCalculator" class="button [radius round]">Swap Calculator</a>
+	</div>
+	<div class="large-6 columns">
+		<a href="/cmt/bondCalculator" class="button [radius round]">Bond Calculator</a>
+	</div>
+</div>
+<div class="row">
+	<ul class="medium-block-grid-5">
+	<li>
+		<a href="/cmt/allPortfolioDetailsReport" class="button [radius round]">Portfolio Details Report</a>
+	</li>
+	<li>
+		<a href="/cmt/valuationReport" class="button [radius round]">Valuation Report</a>
+	</li>
+	<li>
+		<a href="/cmt/hvarPortfolioWithParametersCalculate" class="button [radius round]">Historical VaR Report</a>
+	</li>
+	<li>
+		<a href="/cmt/hvarPortfolioWithParametersCalculatePreConfigured" class="button [radius round]">Preconfigured Historical VaR Report</a>
+	</li>
+	<li>
+		<a href="/cmt/portfolioBenchmarkCorrelation" class="button [radius round]">Portfolio/Benchmark Correlation Report</a>
+	</li>
+	</ul>
+</div>
+{% endblock content %}

@@ -1,0 +1,18 @@
+1. base.html: Updated version
+2. Cleanup all file read and write locations to specify environment variables for direcories
+	a) wc.py: Uses now ROOT_PATH
+	b) decorators.py: Moved all_logs.txt into logs directory 
+	c) StockPriceTextFileCreator.py: Uses now ROOT_PATH
+	d) DBInitialData.py: Uses now ROOT_PATH
+3. Remove print statements in PerformanceCalculator.py 
+4. Add Maintenance menu item in base.html and moved items from Test to Production
+5. Make TimeSeriesNPVCalcultor create timePeriods based on TARGET calendar
+6. Removed cmt installed apps from settings.py as it caused error in command line executions
+7. Fix EquityPositionTest.py to clean up TestLoadAndSaveMarketData. Set to TODO and renamed function
+8. base.html: Move loadMissingMarketDataForPortfolio to 'In Testing Phase'
+9. Created good test for TimeSeriesNPVCalculatorTest.py - In Progress
+10. Cleaned up subfirst, sublast in base.html. Other cleanup such as remove explicit style. Added hint for future use
+11. Fix admin link in menu
+12. Fix batch where maxbatchdata is not equal but after batchdate
+
+

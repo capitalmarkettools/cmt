@@ -1,0 +1,11 @@
+1. Set default fields for swap calculator.
+2. Fix bug in view.py where a debugging print command crashed
+3. Fixed bug in Enum.py. In constructor I need to check validity against choices and not mapping. Also, rename mapping to qlMapping
+4. Set default marketId and pricing date in valuation report
+5. Changed Positiontype to a class
+6. Change base.html to show static data items explicilty with add/delete/list as menu options in level 1.
+7. Changed all references to me to references to cmt (many sweeps)
+8. Added statistics to Swap calculator
+9. Add Location and User Profile static data update screens
+10. Add swap as position type in position
+11. Changed title bar

@@ -1,0 +1,14 @@
+1. Moved development to ubuntu local machine
+2. Fixed Correlation test for HVaR by modifying correlation result to compare to
+3. On dev machine changes environment variables to inclide cmt development directory and remove cmt production
+4. Add Batch Functionality
+	a) Add batch report that will be executed on windows scheduler every workday
+	b) Sets the system date to the today based on laptop date
+	c) Loads equity prices from yahoo
+	d) Load rates from FRED
+	e) Runs valuation report and emails it to cmt email
+	f) Send batch log to cmt email
+5. Add Transactions
+	a) Add Transaction Type
+	b) Add Transaction model
+	c) Add Transaction to GUI

@@ -1,0 +1,19 @@
+{% if allEquityPrices %}
+<table>
+    {% for equityPrice in allEquityPrices %}
+        <tr>
+            <td>
+                <p>{{equityPrice.ticker}}</p>
+            </td>
+             <td>
+                <p>{{equityPrice.pricingDate}}</p>
+            </td>
+            <td>
+                <p>{{equityPrice.mid}}</p>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+{% else %}
+    None
+{% endif %}

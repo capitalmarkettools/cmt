@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Choose Position Type for {{ portfolio.name }}</h1>
+<ul>
+    <form action="addEquityPosition/" method="post">
+        <input type="submit" name="{{portfolio.pk}}" value="Enter New Equity Position" />
+    </form>
+    <form action="addBondPosition/" method="post">
+        <input type="submit" name="{{portfolio.pk}}" value="Enter New Bond Position" />
+    </form>
+</ul>
+
+{% endblock content %}

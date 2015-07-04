@@ -1,0 +1,28 @@
+1. Login and Security
+	a) Try and some m items and show how it prompts you
+	b) Login
+2. Show swap calculator
+	a) Break even rate
+	b) Break even spread
+	c) NPV
+	d) Wait for more stats to add
+3. Show bond calculator
+4. Save bond definition
+5. Show portfolio positions
+6. Add GOOG position as well
+7. Run valuation report
+8. Run HVaR report
+	a) TEST1
+	b) 87 crash
+	c) 2008 crash
+	d) Run detailed
+		i) Parameters to be defined
+9. Run Correlation calculator
+	a) TEST1 vs. GOOG
+	b) TEST1 vs. Bond
+10. Setup new stock
+	a) Decide which ticker and enter it
+	b) Download market data from 8/30/11 - 9/12/11
+	c) Run valuation
+	d) Run HVaR
+
