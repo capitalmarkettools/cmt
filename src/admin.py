@@ -1,4 +1,7 @@
 from models import *
+from src.bo.marketData.swaptionVolatilitySurface import SwaptionVolatilitySurface
+from src.bo.marketData.swaptionVolatility import SwaptionVolatility
+
 from django.contrib import admin
 
 admin.site.register(Portfolio)
@@ -18,6 +21,9 @@ admin.site.register(Batch)
 admin.site.register(Allocation)
 admin.site.register(BondPrice)
 admin.site.register(BondOAS)
+admin.site.register(SwaptionVolatilitySurface)
+admin.site.register(SwaptionVolatility)
+
 
 
 

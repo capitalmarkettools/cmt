@@ -1,0 +1,36 @@
+1. base.html: Updated version - Done
+2. commented out prints in view.py - Done
+3. TODO: Create routine that fills in gaps of market data for historical VaR routine. The gaps will be filled with previous days market data.
+	a) Create test for all market data
+	b) tests/MarketDataFillRoutineTest.py
+	b) implement test
+4. Change default dates to mm/dd/yy format - Done
+	a) forms.py - Done
+5. Resolve all tests to make them work with no errors - Done
+	a) Removed all occurances of loadAndSaveMarketData. - Done
+6. Added 5/1/08 as holiday to US calendar - Done
+7. Remove Duplicated Run buttons - Done
+	a) forms.py - Done
+8. Begin programming of BGM
+	a) tests/BGMTest.py
+	b) tests/allTests.py - Done
+	c) src.models.py - Added Swaption Vols and Surface - Done
+	d) tests/SwaptionVolatilitySurfaceTest.py - Done
+	e) src/bo/utilities/DBInitialData.py - Done
+	f) src/admin.py - Done
+	g) src/bo/playArea/2DimArray.py
+	h) src/bo/playArea/ndarray.py
+	i) src/bo/calculators/LMMRates1Factor.py
+9. Added demo user into DBInitialData.py - Done
+10. Install report writer django-report-builder 
+	a) templates/base.html
+	b) urls.py
+	c) settings.py
+11. Upgraded to Django 1.5
+	a) pip install Django==1.5
+	b) pip install django-contact-form --upgrade
+	c) views.py - replace direct_to_template with TemplateResponse
+12. Added crontbatch.sh
+	
+	
+

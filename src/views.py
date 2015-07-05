@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic.simple import direct_to_template
+from django.template.response import TemplateResponse
 from models import Portfolio, ModelPosition, HvarConfiguration, TCBond, Identifier
 from models import StockPrice, Equity, InterestRateCurve, Batch
 from models import  Location, UserProfile, TCSwap, Transaction, Allocation
@@ -43,25 +43,21 @@ from collections import OrderedDict
 
 @csrf_exempt
 def home(request):
-    return direct_to_template(request,'HistoricalVAR/home.html')
-
-@csrf_exempt
-def landingPage(request):
-    return direct_to_template(request,'HistoricalVAR/landingPage/index.html')
+    return TemplateResponse(request,'HistoricalVAR/home.html')
 
 @csrf_exempt
 def altGUI(request):
-    return direct_to_template(request,'HistoricalVAR/altGUI.html')
+    return TemplateResponse(request,'HistoricalVAR/altGUI.html')
 
 @login_required
 @csrf_exempt
 def logged_in(request):
-    return direct_to_template(request,'HistoricalVAR/home.html')
+    return TemplateResponse(request,'HistoricalVAR/home.html')
 
 @login_required
 @csrf_exempt
 def notYetImplemented(request):
-    return direct_to_template(request,'HistoricalVAR/notYetImplemented.html',
+    return TemplateResponse(request,'HistoricalVAR/notYetImplemented.html',
                               {'title':'Not Implemented'})
 
 @login_required
@@ -74,7 +70,7 @@ def showEquityPrices(request):
             marketId = form.cleaned_data['marketId']
             stockPrices = StockPrice.objects.filter(equity__ticker=equity.ticker, marketId=marketId)
             ret = [(str(p.pricingDate), p.marketId, p.equity.ticker, float(p.mid)) for p in stockPrices]          
-            return direct_to_template(request,'HistoricalVAR/equityPrices.html',
+            return TemplateResponse(request,'HistoricalVAR/equityPrices.html',
                                       {'jsonEquityPrices':json.dumps(ret)})
 
         else:
@@ -82,14 +78,14 @@ def showEquityPrices(request):
     else:
         form = EquityPricesReportForm(initial={'marketId':request.user.get_profile().marketId})
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html', 
                               {'form':form, 'title':'Equity Prices Report' })    
 
 @login_required
 @csrf_exempt
 def showEquityPricesExcel(request):
     allEquityPrices = StockPrice.objects.all()
-    response = direct_to_template(request,'HistoricalVAR/equityPricesToExcel.html',
+    response = TemplateResponse(request,'HistoricalVAR/equityPricesToExcel.html',
                                   {'allEquityPrices':allEquityPrices})
     filename = "testFile.xls"
     response['Content-Disposition'] = 'attachment; filename=' + filename
@@ -99,7 +95,7 @@ def showEquityPricesExcel(request):
 @login_required
 @csrf_exempt
 def googleChartAPITest(request):
-    return direct_to_template(request,'HistoricalVAR/googleChartAPITest.html')
+    return TemplateResponse(request,'HistoricalVAR/googleChartAPITest.html')
 
 @login_required
 @csrf_exempt
@@ -127,7 +123,7 @@ def chartTest(request):
 @csrf_exempt
 def excelTest(request):
     testDate = [(1, 2), (3, 4)]
-    response = direct_to_template(request,'HistoricalVAR/excelTest.html')
+    response = TemplateResponse(request,'HistoricalVAR/excelTest.html')
     filename = "testFile.xls"
     response['Content-Disposition'] = 'attachment; filename=' + filename
     response['Content-Type'] = 'application/vnd.ms-excel; charset=utf-8'
@@ -196,14 +192,14 @@ def hvarPortfolioWithParametersCalculate(request):
                                        'marketId':request.user.get_profile().marketId},
                               user=request.user)
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html',
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html',
                               {'form': form, 'title':"Historical VaR Report"})
 
 @login_required
 @csrf_exempt
 @logShort
 def hvarPortfolioWithParametersDisplayResults(request):
-    return direct_to_template(request,'HistoricalVAR/hVaRReport.html',
+    return TemplateResponse(request,'HistoricalVAR/hVaRReport.html',
                                       {'pricingDate':request.session['hVARCache_pricingDate'],
                                        'marketId':request.session['hVARCache_marketId'],
                                        'stepSize':request.session['hVARCache_stepSize'],
@@ -285,7 +281,7 @@ def hvarPortfolioWithParametersCalculatePreConfigured(request):
         form = HVaRParametersPreConfigured(initial={'pricingDate':request.user.get_profile().location.pricingDate},\
                                            user=request.user)
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html',
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html',
                               {'form': form, 'title':"Historical VaR Report"})
 
 @login_required
@@ -303,7 +299,7 @@ def valuationReport(request):
             #Generates position on the fly
             modelPositions = portfolio.modelposition_set.filter(asOf=pricingDate)
             if len(modelPositions) == 0:
-                return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html',
+                return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html',
                                           {'form': form, 'title':"Valuation Report - No Positions",
                                            'message': 'No positions in portfolio'})
             for modelPosition in modelPositions:
@@ -316,7 +312,7 @@ def valuationReport(request):
             for p in P.positions:
                 p.marketDataContainer = marketDataContainer
 
-            return direct_to_template(request,'HistoricalVAR/valuationReport.html',
+            return TemplateResponse(request,'HistoricalVAR/valuationReport.html',
                                       {'pricingDate':pricingDate, 'portfolio': portfolio,
                                        'mtm': "%01.2f" % P.NPV(pricingDate, marketId),
                                        'title':'Portfolio Valuation'})
@@ -327,7 +323,7 @@ def valuationReport(request):
                                          initial={'marketId':request.user.get_profile().marketId, 
                                                   'pricingDate':request.user.get_profile().location.pricingDate})
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html',
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html',
                               {'form': form, 'title':"Valuation Report"})
         
 #next 2 functions used for creating graphs and caching data
@@ -394,7 +390,7 @@ def hvarPortfolioWithParameters_graphPie(request):
 def javaScriptTest(request):
     positions = ModelPosition.objects.all()
     a = "newText1"
-    return direct_to_template(request,'HistoricalVAR/javaScriptTest.html',
+    return TemplateResponse(request,'HistoricalVAR/javaScriptTest.html',
                               {'positions':positions, 'newText':a})
 
 @login_required
@@ -422,12 +418,12 @@ def positionReport(request):
         form = PositionReportParameters(initial={'pricingDate':request.user.get_profile().location.pricingDate},\
                                         user=request.user)
 
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html',
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html',
                               {'form': form, 'title':"ModelPosition Report"})
     
 @login_required
 def simpleSlickGrid(request):
-    return direct_to_template(request,'HistoricalVAR/simpleSlickGrid.html')
+    return TemplateResponse(request,'HistoricalVAR/simpleSlickGrid.html')
 
 @login_required
 @csrf_exempt
@@ -445,7 +441,7 @@ def loadEquityPrices(request):
             loader = EquityPriceLoader()
             loader.loadHistoricalPricesFromYahoo(secId=equity.ticker, fr=startDate, to=endDate, 
                                                  marketId=marketId)
-            return direct_to_template(request,'HistoricalVAR/loadEquityPricesDone.html',
+            return TemplateResponse(request,'HistoricalVAR/loadEquityPricesDone.html',
                                         {'ticker':equity.ticker,
                                          'startDate': startDate,
                                          'endDate':endDate})
@@ -456,7 +452,7 @@ def loadEquityPrices(request):
         form = LoadEquityPrices(initial={'endDate':request.user.get_profile().location.pricingDate,
                                          'marketId':request.user.get_profile().marketId})
 
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html', 
                               {'form':form, 'title':'Load Equity Prices' }) 
 
 @login_required
@@ -464,7 +460,7 @@ def loadEquityPrices(request):
 def portfolioReport(request):
     portfolios = Portfolio.objects.filter(user=request.user).order_by('name')
     ret = [p.name for p in portfolios ]
-    return direct_to_template(request,'HistoricalVAR/portfolioReport.html',
+    return TemplateResponse(request,'HistoricalVAR/portfolioReport.html',
                               {'jsonPortfolioData':json.dumps(ret),
                                'title':'All Portfolios'})
 
@@ -472,7 +468,7 @@ def portfolioReport(request):
 def tCBondReport(request):
     bonds = TCBond.objects.all()
     ret = [(b.name, str(b.ccy), str(b.startDate), str(b.endDate), str(b.coupon*100)) for b in bonds]
-    return direct_to_template(request,'HistoricalVAR/tCBondsReport.html',
+    return TemplateResponse(request,'HistoricalVAR/tCBondsReport.html',
                               {'jsonPortfolioData':json.dumps(ret),
                                'title':'All Bond Definitions'})
 
@@ -480,7 +476,7 @@ def tCBondReport(request):
 def tCSwapReport(request):
     swaps = TCSwap.objects.all()
     ret = [(b.name, str(b.ccy), str(b.startDate), str(b.endDate), str(b.fixedCoupon*100), str(b.floatingSpread*10000)) for b in swaps]
-    return direct_to_template(request,'HistoricalVAR/tCSwapsReport.html',
+    return TemplateResponse(request,'HistoricalVAR/tCSwapsReport.html',
                               {'jsonPortfolioData':json.dumps(ret)})
     
 @login_required
@@ -488,7 +484,7 @@ def identifierReport(request):
     identifiers = Identifier.objects.all()
     ret = [(str(i.type), i.name) for i in identifiers]
     print ret
-    return direct_to_template(request,'HistoricalVAR/identifierReport.html',
+    return TemplateResponse(request,'HistoricalVAR/identifierReport.html',
                               {'jsonIdentifierData':json.dumps(ret)})
 
     
@@ -496,7 +492,7 @@ def identifierReport(request):
 def equityReport(request):
     equities = Equity.objects.all().order_by('ticker')
     ret = [(e.ticker) for e in equities]
-    return direct_to_template(request,'HistoricalVAR/equityReport.html',
+    return TemplateResponse(request,'HistoricalVAR/equityReport.html',
                               {'jsonEquityData':json.dumps(ret)})
         
 @login_required
@@ -521,7 +517,7 @@ def portfolio(request):
                 p =Portfolio.objects.filter(user=_user).filter(name=_name)
                 if p is not None:
                     p.delete()
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                         {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -529,7 +525,7 @@ def portfolio(request):
     else:
         form = PortfolioForm(user=request.user)
  
-    return direct_to_template(request,'HistoricalVAR/displayStaticDataForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayStaticDataForm.html', 
                               {'form': form, 'title':"Portfolio Maintenance"})
 
 @login_required
@@ -548,7 +544,7 @@ def tCBond(request):
                 a = TCBond.objects.filter(name=form.cleaned_data['name'])
                 if a is not None:
                     a.delete()
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -556,7 +552,7 @@ def tCBond(request):
     else:
         form = TCBondForm()
  
-    return direct_to_template(request,'HistoricalVAR/displayStaticDataForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayStaticDataForm.html', 
                               {'form': form, 'title':"Bond Terms&Conditions Maintenance"})
 
 @login_required
@@ -575,7 +571,7 @@ def tCSwap(request):
                 a = TCSwap.objects.filter(name=form.cleaned_data['name'])
                 if a is not None:
                     a.delete()
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -583,7 +579,7 @@ def tCSwap(request):
     else:
         form = TCSwapForm()
  
-    return direct_to_template(request,'HistoricalVAR/displayStaticDataForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayStaticDataForm.html', 
                               {'form': form, 'title':"Swap Terms&Conditions Maintenance"})
 
 @login_required
@@ -602,7 +598,7 @@ def identifier(request):
                 a = Identifier.objects.filter(name=form.cleaned_data['name']).filter(type=form.cleaned_data['type'])
                 if a is not None:
                     a.delete()
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -610,7 +606,7 @@ def identifier(request):
     else:
         form = IdentifierForm()
  
-    return direct_to_template(request,'HistoricalVAR/displayStaticDataForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayStaticDataForm.html', 
                               {'form': form, 'title':"Bond Identifier Maintenance"})
 
 @login_required
@@ -629,7 +625,7 @@ def equity(request):
                 a = Equity.objects.filter(ticker=form.cleaned_data['ticker'])
                 if a is not None:
                     a.delete()
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -637,7 +633,7 @@ def equity(request):
     else:
         form = EquityForm()
  
-    return direct_to_template(request,'HistoricalVAR/displayStaticDataForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayStaticDataForm.html', 
                               {'form': form, 'title':"Equity Maintenance"})
 
 @login_required
@@ -657,7 +653,7 @@ def position(request):
                 a = ModelPosition.objects.filter(ticker=form.cleaned_data['ticker'])
                 if a is not None:
                     a.delete()
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -665,7 +661,7 @@ def position(request):
     else:
         form = PositionForm(user=request.user)
  
-    return direct_to_template(request,'HistoricalVAR/displayStaticDataForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayStaticDataForm.html', 
                               {'form': form, 'title':"ModelPosition Maintenance"})
 
 @login_required
@@ -711,7 +707,7 @@ def interestRateCurveReportCalculate(request):
                                                           'pricingDate':request.user.get_profile().location.pricingDate,
                                                           'marketId':request.user.get_profile().marketId})
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html', 
                               {'form':form, 'title':'Interest Rate Curve' }) 
     
 
@@ -725,7 +721,7 @@ def interestRateCurveReportDisplay(request):
     title += ' and market id ' + str(request.session['rateCurve_marketId'])
     
  #   <label>{{ccy}}/{{index}}/{{numTerms}}{{term}}/{{marketId}} with pricing date {{pricingDate}}</label>
-    return direct_to_template(request,'HistoricalVAR/interestRateCurveReport.html',
+    return TemplateResponse(request,'HistoricalVAR/interestRateCurveReport.html',
                               {'title': title,
                                'ccy': request.session['rateCurve_ccy'],
                                'index': request.session['rateCurve_index'],
@@ -809,7 +805,7 @@ def portfolioBenchmarkCorrelationReport(request):
 
             pearsonCorr = pearsonr(hvar1.getPnLList(), hvar2.getPnLList())
             
-            return direct_to_template(request,'HistoricalVAR/correlationReport.html',
+            return TemplateResponse(request,'HistoricalVAR/correlationReport.html',
                                       {'pricingDate':pricingDate,
                                        'marketId':marketId,
                                        'stepSize':stepSize,
@@ -837,7 +833,7 @@ def portfolioBenchmarkCorrelationReport(request):
                                                     'marketId':request.user.get_profile().marketId},
                                            user=request.user)
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html',
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html',
                               {'form': form, 'title':"Correlation Report"})
         
 @login_required
@@ -859,7 +855,7 @@ def bondCalculator(request):
                                                  marketId=marketId)
             marketDataContainer.add(marketData)
             bondPosition.marketDataContainer = marketDataContainer
-            return direct_to_template(request,'HistoricalVAR/displayCalculatorForm.html',
+            return TemplateResponse(request,'HistoricalVAR/displayCalculatorForm.html',
                                       {'form': form, 
                                        'price': '$ '+str(round(bondPosition.NPV(pricingDate=pricingDate, 
                                                                  marketId=marketId),2)),
@@ -874,7 +870,7 @@ def bondCalculator(request):
                                    'marketId':request.user.get_profile().marketId,
                                    'name':'Not Needed'})
  
-    return direct_to_template(request,'HistoricalVAR/displayCalculatorForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayCalculatorForm.html', 
                               {'form': form, 'title':"Bond Calculator Input for $100 Notional"})
 
 @login_required
@@ -900,7 +896,7 @@ def swapCalculator(request):
             swapPosition.marketDataContainer = marketDataContainer
             #TODO: Fix this call. It should not be necessary to call
             swapPosition._setupQL(pricingDate=pricingDate, marketId=marketId)
-            return direct_to_template(request,'HistoricalVAR/displayCalculatorForm.html',
+            return TemplateResponse(request,'HistoricalVAR/displayCalculatorForm.html',
                                       {'form': form, 
                                        'price': '$ '+str(round(swapPosition.NPV(pricingDate=pricingDate, 
                                                                  marketId=marketId),2)),
@@ -925,7 +921,7 @@ def swapCalculator(request):
                                    'marketId':request.user.get_profile().marketId,
                                    'name':'Not Needed'})
  
-    return direct_to_template(request,'HistoricalVAR/displayCalculatorForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayCalculatorForm.html', 
                               {'form': form, 'title':"Swap Calculator for $1M Notional"})
 
 @login_required
@@ -943,7 +939,7 @@ def location(request):
                 location.save()
             elif 'Delete' in request.POST:
                 raise ErrorHandling.OtherException('Delete not valid')
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -952,7 +948,7 @@ def location(request):
         form = LocationForm(initial={'name':request.user.get_profile().location.name,
                                      'pricingDate':request.user.get_profile().location.pricingDate})
  
-    return direct_to_template(request,'HistoricalVAR/displayStaticDataForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayStaticDataForm.html', 
                               {'form': form, 'title':"Location Maintenance"})
 
 @login_required
@@ -972,7 +968,7 @@ def userProfile(request):
                 userProfile.save()
             elif 'Delete' in request.POST:
                 raise ErrorHandling.OtherException('Delete not valid')
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -983,55 +979,73 @@ def userProfile(request):
                                         'location':request.user.get_profile().location,
                                         'marketId':request.user.get_profile().marketId})
  
-    return direct_to_template(request,'HistoricalVAR/displayStaticDataForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayStaticDataForm.html', 
                               {'form': form, 'title':"User Profile Maintenance"})
     
 @login_required
 @csrf_exempt
 def loadMissingMarketDataForPortfolio(request):
+    '''
+    This only loads the market data from the portfolio on the as of date. So, if you for example
+    run valuations for some date where the portfolio differs from the portfolio on the as of date
+    then this will now work. Main purpose of this function is to run hostorical var or similar analysis
+    '''
     if request.method == 'POST':
         form = LoadMissingMarketDataForPortfolioForm(data=request.POST)
         if form.is_valid():
             portfolio = form.cleaned_data['portfolio']
+            asOf = Date()
+            asOf.fromPythonDate(form.cleaned_data['asOf'])
             startDate = Date()
             startDate.fromPythonDate(form.cleaned_data['startDate'])
             endDate = Date()
             endDate.fromPythonDate(form.cleaned_data['endDate'])
             calendar = Calendar.createCalendar(form.cleaned_data['calendar'])
             marketId = form.cleaned_data['marketId']
-            raise ErrorHandling.OtherException('modelposition_set needs to be fixed because multiple dates needed. Different dates can have different positions.')
-            modelPositions = portfolio.modelposition_set.filter(asOf=pricingDate)
+            modelPositions = portfolio.modelposition_set.filter(asOf=asOf)
             if len(modelPositions) == 0:
                 return HttpResponse('No positions in portfolio')
             timePeriods = VARUtilities.VARTimePeriodsAndSteps()
             timePeriods.generate(start=startDate, end=endDate, num=1, 
                                  term=Enum.TimePeriod('D'), calendar=calendar)
-            updated = False #indicates if we did any saving
+
+            raise Exception.OtherException('Not implemented yet')
+
             for timeStep in timePeriods.timeSteps:
-                Settings.instance().evaluationDate = timeStep.ql()
+#                Settings.instance().evaluationDate = timeStep.ql()
                 for modelPosition in modelPositions:
+                    done = False
                     pos = CreatePosition(modelPosition)
+                    # check if market data is ok
+                    #if not then move date back one position and try again. Do this until you 
+                    #hit the first day and throw exception. if market data is found on a date then
+                    # copy the market date to the timeStep day
                     try:
                         pos.marketData(timeStep, marketId)
                     except ErrorHandling.MarketDataMissing:
-                        pos.loadAndSaveMarketData(timeStep, marketId)
+                        while done == False:
+                            try:
+                                pass
+                            except: 
+                                pass
                         updated = True
             if updated == True:
-                notification = 'Market data was added'
+                notification = 'Market data was added or updated'
             else:
                 notification = 'All market data was already up to date'
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':notification})
         else:
             #if form is not valid then just go back to the url and display errors
             form = LoadMissingMarketDataForPortfolioForm(data=request.POST)
     else:
         form = LoadMissingMarketDataForPortfolioForm(initial={'marketId':request.user.get_profile().marketId,
+                                                              'asOf':request.user.get_profile().location.pricingDate,
                                                               'startDate':request.user.get_profile().location.pricingDate,
                                                               'endDate':request.user.get_profile().location.pricingDate})
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html', 
-                              {'form': form, 'title':"Load Missing Market Data for Portfolio"})
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html', 
+                              {'form': form, 'title':"Load Missing Market Data for a Date Range for Portfolio on the As of Date"})
 
 @login_required
 @csrf_exempt
@@ -1056,7 +1070,7 @@ def allPortfolioDetailsReport(request):
                 ret.append((portfolio.name, str(modelPosition.positionType), modelPosition.ticker, 
                             str(modelPosition.amount), Converter.fToDC(floatValue=value)))
     ret.append(('TOTAL', '','','',Converter.fToDC(floatValue=totalValue)))
-    return direct_to_template(request,'HistoricalVAR/allPortfolioDetailsReport.html',
+    return TemplateResponse(request,'HistoricalVAR/allPortfolioDetailsReport.html',
                               {'jsonPositionData':json.dumps(ret),
                                'title':'Details for all portfolios'})
             
@@ -1065,7 +1079,7 @@ def transactionReport(request):
     transactions = Transaction.objects.all()
     ret = [(t.portfolio.name,str(t.transactionType),str(t.positionType),t.ticker,\
             str(t.amount),str(t.transactionDate),str(t.effectiveDate)) for t in transactions]
-    return direct_to_template(request,'HistoricalVAR/transactionReport.html',
+    return TemplateResponse(request,'HistoricalVAR/transactionReport.html',
                               {'jsonTransactionData':json.dumps(ret)})
    
 @login_required
@@ -1082,7 +1096,7 @@ def transaction(request):
                 form.save()
             elif 'Delete' in request.POST:
                 raise ErrorHandling.OtherException('Not yet implemented')
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -1091,19 +1105,19 @@ def transaction(request):
     else:
         form = TransactionForm(user=request.user)
  
-    return direct_to_template(request,'HistoricalVAR/displayStaticDataForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayStaticDataForm.html', 
                               {'form': form, 'title':"Transaction Maintenance"})
 
 @login_required
 @csrf_exempt
 def assetAllocationGraph(request):
-    return direct_to_template(request,'HistoricalVAR/assetAllocationGraph.html',
+    return TemplateResponse(request,'HistoricalVAR/assetAllocationGraph.html',
                               {'title':'Asset Allocation'})
             
 @login_required
 @csrf_exempt
 def overview(request):
-    return direct_to_template(request,'HistoricalVAR/overview.html',
+    return TemplateResponse(request,'HistoricalVAR/overview.html',
                               {'title':'Overview'})
             
 @login_required
@@ -1117,7 +1131,7 @@ def batch(request):
             batch = BatchUtility(batchDate=batchDate)
             batch.run()
             batch.sendEmail()
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Batch done for '+str(batchDate)+'. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -1126,7 +1140,7 @@ def batch(request):
     else:
         form = BatchForm(initial={'pricingDate':request.user.get_profile().location.pricingDate})
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html', 
                               {'form': form, 'title':"Batch Run"})
     
 @login_required
@@ -1145,7 +1159,7 @@ def multiBatches(request):
                 batch.run()
                 batch.sendEmail()
                 batchDate.nextDay()
-            return direct_to_template(request,'HistoricalVAR/displayStaticDataFormDone.html',
+            return TemplateResponse(request,'HistoricalVAR/displayStaticDataFormDone.html',
                                       {'notification':'Done. Click browser Back to do similar task.'})
         else:
             #if form is not valid then just go back to the url and display errors
@@ -1156,7 +1170,7 @@ def multiBatches(request):
     else:
         form = MultiBatchesForm()
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html', 
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html', 
                               {'form': form, 'title':"Batch Run Over Time Period"})
 
 @login_required
@@ -1213,7 +1227,7 @@ def performanceReport(request):
             ret.append(('TOTAL', Converter.fToDC(floatValue=totalStart), Converter.fToDC(floatValue=totalEnd),
                         Converter.fToDC(floatValue=periodPerformance),Converter.fToDC(floatValue=annualPerformance)))
                         
-            return direct_to_template(request,'HistoricalVAR/performanceReport.html',
+            return TemplateResponse(request,'HistoricalVAR/performanceReport.html',
                                       {'title':'Performance Report from '+str(startDate)+' to '+str(endDate),
                                        'reportData':json.dumps(ret)})
         else:
@@ -1225,7 +1239,7 @@ def performanceReport(request):
         form = PerformanceReportParameters(initial={'endDate':request.user.get_profile().location.pricingDate,
                                                     'marketId':request.user.get_profile().marketId}, user=request.user)
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html',
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html',
                               {'form': form, 'title':"Performance Report"})
         
 @login_required
@@ -1257,9 +1271,9 @@ def assetAllocationReport(request):
                     position.marketDataContainer = marketDataContainer
                 for position in portfolio.positions:
                     npv = position.NPV(pricingDate=pricingDate, marketId=marketId)
-                    print portfolio.name + "\t" + str(position.getAssetType())
+#                    print portfolio.name + "\t" + str(position.getAssetType())
                     allocations[str(position.getAssetType())] += npv
-                    print allocations
+#                    print allocations
                     totalValue += npv
         
             orderedAllocations = OrderedDict(sorted(allocations.items(),key=lambda t: t[1],reverse=True))
@@ -1275,7 +1289,7 @@ def assetAllocationReport(request):
                 ret.append((key, Converter.fToDC(floatValue=actualAllocation), Converter.fToDC(floatValue=100*allocationPercent),
                             Converter.fToDC(floatValue=orderedAllocations[key])))
 
-            return direct_to_template(request,'HistoricalVAR/assetAllocationReport.html',
+            return TemplateResponse(request,'HistoricalVAR/assetAllocationReport.html',
                                       {'title':'Asset Allocation Report',
                                        'reportData':json.dumps(ret)})
         else:
@@ -1287,7 +1301,7 @@ def assetAllocationReport(request):
         form = AssetAllocationReportParameters(initial={'pricingDate':request.user.get_profile().location.pricingDate,
                                                         'marketId':request.user.get_profile().marketId}, user=request.user)
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html',
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html',
                               {'form': form, 'title':"Asset Allocation Report"})
 
 @login_required
@@ -1312,7 +1326,7 @@ def netWorthTrendReport(request):
             print calculator.results()
             for result in results:
                 ret.append((str(result[0]),Converter.fToDC(result[1])))
-            return direct_to_template(request,'HistoricalVAR/netWorthTrendReport.html',
+            return TemplateResponse(request,'HistoricalVAR/netWorthTrendReport.html',
                                         {'title':'Networth Trend from '+str(startDate)+' to '+str(endDate),
                                          'reportData':json.dumps(ret)})
         else:
@@ -1324,7 +1338,7 @@ def netWorthTrendReport(request):
         form = NetWorthTrendReportParameters(initial={'endDate':request.user.get_profile().location.pricingDate,
                                                     'marketId':request.user.get_profile().marketId}, user=request.user)
  
-    return direct_to_template(request,'HistoricalVAR/displayReportParameterForm.html',
+    return TemplateResponse(request,'HistoricalVAR/displayReportParameterForm.html',
                               {'form': form, 'title':"Networth Trend Report"})
         
         

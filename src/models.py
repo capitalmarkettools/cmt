@@ -6,6 +6,7 @@ from src.bo.Enum import Currency, Frequency, Roll, TimePeriod, Index, PositionTy
 from src.bo.static import Calendar
 from src.bo import cmt, Shift, Enum, Date, ErrorHandling
 from src.bo.decorators import log
+from scipy.interpolate import interp2d
 import QuantLib
 
 class Portfolio(models.Model):
@@ -629,7 +630,146 @@ class Allocation(models.Model, cmt.cmt):
         db_table = 'cmt_allocation'
     def __unicode__(self):
         return u"%s/%s" % (self.user, self.assetType)
+
+class SwaptionVolatilitySurface(models.Model):
+    '''
+    Swaption Volatility Surface. Contains Model info and business logic
+    Does not support smile currently
+    Interpolates linearly on Annual points with Year fraction. No calendar taken into account
+    '''
+    ccy = modelFields.CurrencyField(max_length=20)
+    index = modelFields.IndexField(max_length=20, default=Index('LIBOR'))
+    term = modelFields.TimePeriodField(max_length=20)
+    numTerms = models.IntegerField()
+    pricingDate = modelFields.DateField()
+    marketId = models.CharField(max_length=20, blank=True, default='')
+
+    class Meta:
+        db_table = 'cmt_swaptionvolatilitysurface'
+        unique_together = ('ccy', 'index', 'term', 'numTerms', 'pricingDate', 'marketId')
+
+    def __init__(self, *args, **kwargs):
+        #these are the volatility points of the surface
+        self._volatilities = []
+        #_expirations, _tenors and _values are used by interp2d. For now only annual values supported
+        self._expirations = []
+        self._tenors = []
+        self._values = []
+        self._interpolator = None
         
+        super(SwaptionVolatilitySurface, self).__init__(*args, **kwargs)
+    
+    def __unicode__(self):
+        return "%s/%s/%s/%s/%s/%s/%s" % (self.__class__, self.ccy, self.index, self.term, 
+                                      self.numTerms, self.pricingDate, self.marketId)
+    
+    def save(self):
+        '''
+        if surface does not exists then save the surface. 
+        otherwise delete the DB volatilities and save the new volatilities
+        ''' 
+        try:
+            vols = SwaptionVolatilitySurface.objects.get(ccy=self.ccy, 
+                                                          index=self.index,
+                                                          term=self.term, 
+                                                          numTerms=self.numTerms,
+                                                          pricingDate=self.pricingDate, 
+                                                          marketId=self.marketId)
+            oldVolPoints = vols.swaptionvolatility_set.all()
+            for oldVolPoint in oldVolPoints:
+                oldVolPoint.delete()
+            for volPoint in self._volatilities:
+                volPoint.surface = vols
+                volPoint.save()
+        except SwaptionVolatilitySurface.DoesNotExist:
+            super(SwaptionVolatilitySurface, self).save()
+            vols = SwaptionVolatilitySurface.objects.get(ccy=self.ccy, 
+                                                         index=self.index,
+                                                         term=self.term, 
+                                                         numTerms=self.numTerms,
+                                                         pricingDate=self.pricingDate, 
+                                                         marketId=self.marketId)
+            for volPoint in self._volatilities:
+                volPoint.surface = vols
+                volPoint.pk = None
+                volPoint.save()
+        
+    def load(self):
+        try:
+            vols = SwaptionVolatilitySurface.objects.get(ccy=self.ccy, 
+                                                         index=self.index,
+                                                         term=self.term, 
+                                                         numTerms=self.numTerms,
+                                                         pricingDate=self.pricingDate, 
+                                                         marketId=self.marketId)
+        except SwaptionVolatilitySurface.DoesNotExist:
+            raise ErrorHandling.MarketDataMissing(str(self)+' cannot be loaded')
+
+        #set the current curve to have the correct key
+        self.id = vols.id
+        #load volatilities from DB
+        self.addVolatilities(self.swaptionvolatility_set.all())
+
+    def getValue(self, expiryTerm, expiryNumTerms, underlyingTerm, underlyingNumTerms):
+        return self._interpolator(expiryNumTerms, underlyingNumTerms)
+
+    def addVolatilities(self, volatilities):
+#        print volatilities
+ #       print self._volatilities
+        for volatility in volatilities:
+  #          print 'Processisng ' + str(volatility)
+            volatility.surface = self
+            exists = False
+            for v in self._volatilities:
+   #             print 'Checking if already exists. Checking ' + str(v)
+                if v.expiryTerm == volatility.expiryTerm:
+                    if v.expiryNumTerms == volatility.expiryNumTerms:
+                        if v.underlyingTerm == volatility.underlyingTerm:
+                            if v.underlyingNumTerms == volatility.underlyingNumTerms:
+                                exists = True
+    #                            print 'continue'
+                                continue
+     #       print exists
+            if exists == False:
+                if volatility.expiryTerm <> TimePeriod('Y') or volatility.underlyingTerm <> TimePeriod('Y'):
+                    raise ErrorHandling.OtherException('Only Annual Expiry and Tenors supported for swaption vol surface')
+      #          print 'Adding points'
+                self._volatilities.append(volatility)
+                self._expirations.append(volatility.expiryNumTerms)
+                self._tenors.append(volatility.underlyingNumTerms)
+                self._values.append(volatility.mid)
+       # print 'In addVolatility'
+#        print volatility
+ #       print self._expirations
+  #      print self._tenors
+   #     print self._values
+        self._interpolator = interp2d(self._expirations, self._tenors, self._values, kind = 'linear')
+        
+class SwaptionVolatility(models.Model):
+    '''
+    Swaption Volatility Surface. Contains Model info and business logic
+    Does not support smile currently
+    '''
+    expiryTerm = modelFields.TimePeriodField(max_length=20)
+    expiryNumTerms = models.IntegerField()
+    underlyingTerm = modelFields.TimePeriodField(max_length=20)
+    underlyingNumTerms = models.IntegerField()
+    mid = models.FloatField()
+    surface = models.ForeignKey('SwaptionVolatilitySurface')
+
+    class Meta:
+        db_table = 'cmt_swaptionvolatility'
+        unique_together = ('expiryTerm', 'expiryNumTerms', 'underlyingTerm', 'underlyingNumTerms')
+
+    def __unicode__(self):
+        return "%s/%s/%s/%s/%s" % (self.expiryTerm, self.expiryNumTerms,
+                                      self.underlyingTerm, self.underlyingNumTerms,
+                                      self.surface)
+        
+    def __str__(self):
+        return "%s/%s/%s/%s/%s/%s" % (self.expiryTerm, self.expiryNumTerms,
+                                      self.underlyingTerm, self.underlyingNumTerms,
+                                      self.mid, self.surface)        
 def main():
     pass
         

@@ -7,7 +7,7 @@ from settings import ROOT_PATH
 from src.models import Equity, StockPrice, InterestRateCurve, InterestRate
 from src.models import Location, UserProfile, TCBond, Identifier,Portfolio
 from src.models import ModelPosition, HvarConfiguration, Transaction, Batch
-from src.models import BondOAS
+from src.models import BondOAS, SwaptionVolatilitySurface, SwaptionVolatility
 from src.bo.Enum import TransactionType, PositionType, BondIdentifierType
 from src.bo import Enum, VARUtilities
 from src.bo.Date import Date
@@ -80,6 +80,14 @@ class DBInitialData(object):
             up3.location = location
             up3.marketId = 'TEST1'
             up3.save()
+
+        user4 = User.objects.get(username='demo')
+        if not UserProfile.objects.filter(user=user4).exists():
+            up4 = UserProfile()
+            up4.user = user4
+            up4.location = location
+            up4.marketId = 'DEMO'
+            up4.save()
         
         if not TCBond.objects.filter(name='TEST1').exists():
             bond = TCBond()
@@ -270,6 +278,23 @@ class DBInitialData(object):
                                    numTerms=30,mid=0.01,curve=curve))
         curve.save()
         
+        if not SwaptionVolatilitySurface.objects.filter(ccy=Enum.Currency('USD'), index=Enum.Index('LIBOR'), term=Enum.TimePeriod('M'), numTerms=3, 
+                                                        pricingDate=testDate, marketId='TEST1'):
+            #Special case where I just append the vols. Should use a function
+            vols = SwaptionVolatilitySurface(ccy=Enum.Currency('USD'), index=Enum.Index('LIBOR'), term=Enum.TimePeriod('M'), numTerms=3, 
+                                             pricingDate=testDate, marketId='TEST1')
+            volPoints = []
+            volPoints.append(SwaptionVolatility(expiryTerm=Enum.TimePeriod('Y'), expiryNumTerms=1, underlyingTerm=Enum.TimePeriod('Y'),
+                                                underlyingNumTerms=3, mid=0.40, surface=vols))
+            volPoints.append(SwaptionVolatility(expiryTerm=Enum.TimePeriod('Y'), expiryNumTerms=3, underlyingTerm=Enum.TimePeriod('Y'),
+                                                underlyingNumTerms=3, mid=0.45, surface=vols))
+            volPoints.append(SwaptionVolatility(expiryTerm=Enum.TimePeriod('Y'), expiryNumTerms=1, underlyingTerm=Enum.TimePeriod('Y'),
+                                                underlyingNumTerms=5, mid=0.5, surface=vols))
+            volPoints.append(SwaptionVolatility(expiryTerm=Enum.TimePeriod('Y'), expiryNumTerms=3, underlyingTerm=Enum.TimePeriod('Y'),
+                                                underlyingNumTerms=5, mid=0.55, surface=vols))
+            vols.addVolatilities(volPoints)
+            vols.save()
+            
         if not BondOAS.objects.filter(tCBond=TCBond.objects.get(name='TEST1'),pricingDate=testDate,
                                    marketId='TEST1'):
             bondOAS = BondOAS(tCBond=TCBond.objects.get(name='TEST1'),pricingDate=testDate,

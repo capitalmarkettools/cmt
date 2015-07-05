@@ -22,6 +22,10 @@ from src.bo.tests import InterestRateCurveTest
 from src.bo.tests import ImplyOASTest
 from src.bo.tests import BondOASTest
 from src.bo.tests import TimeSeriesNPVCalculatorTest
+from src.bo.tests import MarketDataFillRoutineTest
+from src.bo.tests import BGMTest
+from src.bo.tests import SwaptionVolatilitySurfaceTest
+
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()
@@ -42,5 +46,8 @@ if __name__ == '__main__':
                                    ImplyOASTest.suite(),
                                    BondOASTest.suite(),
                                    TimeSeriesNPVCalculatorTest.suite(),
+                                   MarketDataFillRoutineTest.suite(),
+                                   BGMTest.suite(),
+                                   SwaptionVolatilitySurfaceTest.suite(),
                                    InterestRateCurveTest.suite()])
     runner.run(allTests)

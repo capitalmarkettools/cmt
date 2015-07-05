@@ -102,6 +102,7 @@ INSTALLED_APPS = (
     'contact_form',
     'registration',
     'crispy_forms',
+    'report_builder',
 )
 
 #SESSION_ENGINE = 'django.contrib.sessions.backends.file'
@@ -149,6 +150,8 @@ CRISPY_TEMPLATE_PACK = 'uni_form'
 
 #All file locations
 BATCH_LOGS = os.path.join(ROOT_PATH, 'logs/')
+
+STATIC_URL = '/static/'
 
 LOGIN_URL = '/cmt/accounts/login/'
 LOGOUT_URL = '/cmt/accounts/login/'

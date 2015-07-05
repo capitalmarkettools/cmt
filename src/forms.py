@@ -14,16 +14,15 @@ class HVaRParameters(forms.Form):
         self.user = user
         super(HVaRParameters, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('Run','Run'))
         
     portfolio = AutoCompleteSelectField('portfolio',required=True)
-    startDate = forms.DateField(required=True)
-    endDate = forms.DateField(required=True)
+    startDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required = True)
+    endDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     stepSize = forms.IntegerField(required=True)
     stepUnit = forms.ChoiceField(choices=TimePeriod.choices,required=True)
     calendar = forms.ChoiceField(choices=Calendar.choices,required=True)
     confLevel = forms.FloatField(required=True)
-    pricingDate = forms.DateField(required=True)
+    pricingDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     marketId = forms.CharField(required=True)
     
     def clean(self):
@@ -43,11 +42,10 @@ class HVaRParametersPreConfigured(forms.Form):
         self.user = user
         super(HVaRParametersPreConfigured, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('Run','Run'))
         
     portfolio = AutoCompleteSelectField('portfolio',required=True)
     config = AutoCompleteSelectField('hvarconfig',required=True)
-    pricingDate = forms.DateField(required=True)
+    pricingDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     
     def clean(self):
         try:
@@ -63,10 +61,9 @@ class ValuationReportParameters(forms.Form):
         self.user = user
         super(ValuationReportParameters, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('Run','Run'))
         
     portfolio = AutoCompleteSelectField('portfolio',required=True)
-    pricingDate = forms.DateField(required=True)
+    pricingDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     marketId = forms.CharField(required=True)
     
     def clean(self):
@@ -80,11 +77,10 @@ class LoadEquityPrices(forms.Form):
     def __init__(self, *args, **kwargs):
         super(LoadEquityPrices, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('Run','Run'))
         
     equity = AutoCompleteSelectField('equity')
-    startDate = forms.DateField(required=True)
-    endDate = forms.DateField(required=True)
+    startDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
+    endDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     calendar = forms.ChoiceField(choices=Calendar.choices,required=True)
     marketId = forms.CharField(required=True)
     
@@ -97,11 +93,11 @@ class LoadMissingMarketDataForPortfolioForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(LoadMissingMarketDataForPortfolioForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('Run','Run'))
 
     portfolio = AutoCompleteSelectField('portfolio',required=True)
-    startDate = forms.DateField(required=True)
-    endDate = forms.DateField(required=True)
+    asOf = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
+    startDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
+    endDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     calendar = forms.ChoiceField(choices=Calendar.choices,required=True)
     marketId = forms.CharField(required=True)
     
@@ -116,10 +112,9 @@ class PositionReportParameters(forms.Form):
         self.user = user
         super(PositionReportParameters, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('Run','Run'))
         
     portfolio = AutoCompleteSelectField('portfolio')
-    pricingDate = forms.DateField(required=True)
+    pricingDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
        
     def clean(self):
         try:
@@ -158,9 +153,13 @@ class PortfolioForm(forms.ModelForm):
         return self.cleaned_data
     
 class TCBondCalculatorForm(forms.ModelForm):
-    pricingDate = forms.DateField()
+    pricingDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'), 
+                                  input_formats=('%m/%d/%y',))
     marketId = forms.CharField()
-    
+    startDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'), 
+                                input_formats=('%m/%d/%y',))
+    endDate = forms.DateField(widget=forms.DateInput(format = '%m/%d/%y'), 
+                                input_formats=('%m/%d/%y',))
     def __init__(self, *args, **kwargs):
         super(TCBondCalculatorForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -175,8 +174,14 @@ class TCBondCalculatorForm(forms.ModelForm):
         return self.cleaned_data
 
 class TCSwapCalculatorForm(forms.ModelForm):
-    pricingDate = forms.DateField()
+    pricingDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'), 
+                                  input_formats=('%m/%d/%y',))
     marketId = forms.CharField()
+    
+    startDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'), 
+                                input_formats=('%m/%d/%y',))
+    endDate = forms.DateField(widget=forms.DateInput(format = '%m/%d/%y'), 
+                                input_formats=('%m/%d/%y',))
     
     def __init__(self, *args, **kwargs):
         super(TCSwapCalculatorForm, self).__init__(*args, **kwargs)
@@ -243,7 +248,7 @@ class InterestRateCurveReportParameters(forms.ModelForm):
         #user is used in form valiadtion. Can be changed at some point to request or session
         super(InterestRateCurveReportParameters, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('Run','Run'))
+
     class Meta:
         model = InterestRateCurve
     def clean(self):
@@ -256,16 +261,15 @@ class CorrelationReportParameters(forms.Form):
         self.user = user
         super(CorrelationReportParameters, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.add_input(Submit('Run','Run'))
 
     portfolio = AutoCompleteSelectField('portfolio', required=True)
     benchmark = AutoCompleteSelectField('equity', required=True)
-    startDate = forms.DateField(required=True)
-    endDate = forms.DateField(required=True)
+    startDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
+    endDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     stepSize = forms.IntegerField(required=True)
     stepUnit = forms.ChoiceField(choices=TimePeriod.choices, required=True)
     calendar = forms.ChoiceField(choices=Calendar.choices, required=True)
-    pricingDate = forms.DateField(required=True)
+    pricingDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     marketId = forms.CharField(required=True)
     
     def clean(self):
@@ -349,8 +353,8 @@ class MultiBatchesForm(forms.Form):
         super(MultiBatchesForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
 
-    startDate = forms.DateField(required=True)
-    endDate = forms.DateField(required=True)
+    startDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
+    endDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
 
 class PerformanceReportParameters(forms.Form):
     def __init__(self, user, *args, **kwargs):
@@ -359,8 +363,8 @@ class PerformanceReportParameters(forms.Form):
         super(PerformanceReportParameters, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         
-    startDate = forms.DateField(required=True)
-    endDate = forms.DateField(required=True)
+    startDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
+    endDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     marketId = forms.CharField(required=True)
        
     def clean(self):
@@ -375,7 +379,7 @@ class AssetAllocationReportParameters(forms.Form):
         super(AssetAllocationReportParameters, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         
-    pricingDate = forms.DateField(required=True)
+    pricingDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     marketId = forms.CharField(required=True)
        
     def clean(self):
@@ -388,8 +392,8 @@ class NetWorthTrendReportParameters(forms.Form):
         super(NetWorthTrendReportParameters, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         
-    startDate = forms.DateField(required=True)
-    endDate = forms.DateField(required=True)
+    startDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
+    endDate = forms.DateField(widget = forms.DateInput(format = '%m/%d/%y'),input_formats = ('%m/%d/%y',),required=True)
     marketId = forms.CharField(required=True)
        
     def clean(self):
